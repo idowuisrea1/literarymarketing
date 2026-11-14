@@ -1,9 +1,7 @@
 /**
  * ALL BUSINESS CONTENT LIVES HERE. Copied from the live site (literarymarketing.lovable.app).
- * Not included on purpose, because they were unverified placeholders on the live site:
- * the illustrative dashboard numbers, the "50+ books / 30+ authors / 5 star" sample stats,
- * the placeholder testimonial and the placeholder proof-story result.
- * Add real ones to `testimonials`, `stats` and `proofStory.result` and they will appear automatically.
+ * PLACEHOLDERS (owner will replace): `stats`, `testimonials` and `proofStory.result` below.
+ * Search this file for "PLACEHOLDER" to find them.
  */
 
 const ASSETS = "https://literarymarketing.lovable.app/__l5e/assets-v1/";
@@ -83,7 +81,7 @@ export type Category = (typeof categories)[number];
 
 export type Project = { id: string; title: string; category: Category; detail?: string; youtubeId?: string; image?: string };
 
-// The live site lists 35 projects; the 19 below are the ones visible on its page. Add the rest here.
+// The live site lists 35 projects; the 18 below are the ones visible on its page. Add the rest here.
 export const projects: Project[] = [
   { id: "dragon-cursed", title: "Dragon Cursed", detail: "by Elise Kova", category: "Book Trailers", youtubeId: "6MgL7enCGmI" },
   { id: "trailer-ahmj", title: "Book trailer", category: "Book Trailers", youtubeId: "AhmJbAvhueE" },
@@ -113,12 +111,20 @@ export const proofStory = {
   image: asset("462d3a49-306e-4e8b-800e-2f2bc8f8dbf5/sp-memoirs.webp"),
   challenge: "A time-travel sci-fi romance with a huge hook (a baseball signed in 1908 with ink that shouldn't exist) had to explain itself in seconds on a crowded Amazon page and social feed.",
   did: "We designed a one-glance book spotlight that turns the story's hook into five scannable moments, with the 3D book and e-reader mockups and a clear 'Available on Amazon' call to action.",
-  result: "", // Add a real, verified result (clicks, saves, sales). Hidden while empty.
+  result: "[PLACEHOLDER: add a real result here, such as clicks, saves or sales.]", // PLACEHOLDER: replace with a verified result
 };
 
 export type Testimonial = { quote: string; name: string; role: string };
-export const testimonials: Testimonial[] = []; // Real, permissioned quotes only. Section hidden while empty.
-export const stats: { value: string; label: string }[] = []; // Verified figures only. Hidden while empty.
+// PLACEHOLDER: replace with real, permissioned testimonials.
+export const testimonials: Testimonial[] = [
+  { quote: "[PLACEHOLDER: add a real testimonial from a client here.]", name: "Author name", role: "Author" },
+];
+// PLACEHOLDER: sample figures. Replace with verified numbers.
+export const stats: { value: string; label: string }[] = [
+  { value: "50+", label: "Books marketed (sample)" },
+  { value: "30+", label: "Authors served (sample)" },
+  { value: "5★", label: "Average rating (sample)" },
+];
 
 export const faqs = [
   { q: "What is included in each package?", a: "Every package includes content design, posting and a monthly report. Higher tiers add videos, email funnels and websites. See the pricing cards for the full list." },
