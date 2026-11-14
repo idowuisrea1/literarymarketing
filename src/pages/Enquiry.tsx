@@ -2,6 +2,7 @@ import { FormEvent, useRef, useState } from "react";
 import { useSearchParams } from "react-router-dom";
 import Seo from "../components/Seo";
 import { genres, serviceFromParam, serviceOptions, site } from "../content/site";
+import { endpoints } from "../content/endpoints";
 import { track } from "../lib/analytics";
 
 type Form = { name: string; email: string; genre: string; service: string; message: string; consent: boolean };
@@ -32,6 +33,7 @@ export default function Enquiry() {
   const [step, setStep] = useState(0);
   const [d, setD] = useState<Form>({ name: "", email: "", genre: "", service: serviceFromParam(params.get("service")) || (serviceOptions.includes(params.get("service") ?? "") ? params.get("service")! : ""), message: "", consent: false });
   const [errors, setErrors] = useState<Errors>({});
+  const [trap, setTrap] = useState("");
   const [status, setStatus] = useState<"idle" | "sending" | "done" | "error">("idle");
   const started = useRef(false);
 
@@ -46,11 +48,14 @@ export default function Enquiry() {
     const e = validate(2, d);
     setErrors(e);
     if (Object.keys(e).length) return;
-    const endpoint = import.meta.env.VITE_FORM_ENDPOINT;
-    if (!endpoint) { setStatus("error"); return; }
+    if (trap) { setStatus("done"); return; } // spam bot filled the hidden field
     setStatus("sending");
     try {
-      const res = await fetch(endpoint, { method: "POST", headers: { "Content-Type": "application/json", Accept: "application/json" }, body: JSON.stringify(d) });
+      const res = await fetch(endpoints.enquiry, {
+        method: "POST",
+        headers: { "Content-Type": "application/json", Accept: "application/json" },
+        body: JSON.stringify({ ...d, _subject: `New enquiry from ${d.name}` }),
+      });
       if (!res.ok) throw new Error(String(res.status));
       setStatus("done");
       track("form_complete", { service: d.service, genre: d.genre });
@@ -76,6 +81,7 @@ export default function Enquiry() {
       <p className="progress" aria-live="polite">Step {step + 1} of {STEPS.length}: {STEPS[step]}</p>
       <progress max={STEPS.length} value={step + 1} aria-label="Form progress" />
       <form onSubmit={submit} noValidate>
+        <input type="text" name="_gotcha" tabIndex={-1} autoComplete="off" aria-hidden="true" style={{ position: "absolute", left: "-9999px" }} value={trap} onChange={(e) => setTrap(e.target.value)} />
         {step === 0 && <>
           {field("name", "Name", <input {...aria("name")} autoComplete="name" value={d.name} onChange={(e) => set("name", e.target.value)} />)}
           {field("email", "Email", <input {...aria("email")} type="email" autoComplete="email" value={d.email} onChange={(e) => set("email", e.target.value)} />)}
